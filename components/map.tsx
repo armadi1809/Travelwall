@@ -9,17 +9,17 @@ import {
   useMapEvent,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { TestEvent } from "node:test/reporters";
-
-function EventTracker() {
-  const TestEvent = useMapEvent("click", (e) =>
-    console.log("clicked on", e.latlng)
-  );
-  return null;
-}
+import { useState } from "react";
 
 export default function Map() {
   const position: LatLngExpression = [51.505, -0.09];
+  const [pos, setPos] = useState<LatLngExpression>([51.505, -0.09]);
+  function EventTracker() {
+    useMapEvent("click", (e) => {
+      setPos([e.latlng.lat, e.latlng.lng]);
+    });
+    return null;
+  }
 
   return (
     <MapContainer
@@ -33,7 +33,7 @@ export default function Map() {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Marker position={position}>
+      <Marker position={pos}>
         <Popup>
           A pretty CSS3 popup. <br /> Easily customizable.
         </Popup>
